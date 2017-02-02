@@ -1,5 +1,5 @@
 # Base
-FROM          alpine:latest
+FROM          alpine:edge
 MAINTAINER    Daniel van der Spuy <hello@danielvdspuy.co>
 
 # Environment variables
@@ -23,6 +23,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 #            libpng-dev \
 #            libjpeg-turbo-dev \
 #            libxml2-dev \
+            shadow \
             autoconf \
 #            gcc \
             g++ \
@@ -54,13 +55,13 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 #&&  service supervisord stop \
 
 # Delete compilation dependencies
-&&  apk del autoconf g++ libtool make \
+&&  apk del autoconf g++ libtool make
 
 # Enable imagick PHP extension
-&&  echo "extension=imagick.so" > /etc/php7/php.ini \
+RUN  echo "extension=imagick.so" > /etc/php7/php.ini
 
 # Setup
-&&  sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf \
+RUN  sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf \
 &&  sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.d/www.conf \
 &&  sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf \
 &&  sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php7/php.ini \
@@ -68,11 +69,11 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 &&  sed -i "s|;*upload_max_filesize =.*|upload_max_filesize = ${MAX_UPLOAD}|i" /etc/php7/php.ini \
 &&  sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|i" /etc/php7/php.ini \
 &&  sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php7/php.ini \
-&&  sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php7/php.ini \
+&&  sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php7/php.ini
     
 # Cleanup
-&&  apk del tzdata \
-#&&	rm -rf /var/cache/apk/*
+RUN  apk del tzdata \
+&&	rm -rf /var/cache/apk/*
     
 # Copy configs & scripts
 ADD ./supervisor.conf /etc/supervisor/conf.d/supervisor.conf
@@ -80,8 +81,10 @@ ADD ./start.sh /start.sh
 
 # Set permissions
 RUN chmod 755 /start.sh
-RUN usermod -u 1000 www-data
-RUN usermod -G staff www-data
+
+RUN set -x ; \
+    addgroup -g 82 -S www-data ; \
+    adduser -u 82 -D -S -G www-data www-data
 RUN chown -R www-data:www-data /var/www
     
 # Set work directory
@@ -95,4 +98,4 @@ EXPOSE 80
 EXPOSE 9000
 
 # Script entry point
-CMD ["/bin/bash", "/start.sh"]
+ENTRYPOINT ["supervisord", "--configuration", "/etc/supervisor/conf.d/supervisor.conf"]
