@@ -70,6 +70,10 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
     apk del tzdata && \
 	rm -rf /var/cache/apk/*
     
+# Copy configs & scripts
+ADD ./supervisor.conf /etc/supervisor/conf.d/supervisord.conf
+ADD ./start.sh /start.sh
+    
 # Set work directory
 WORKDIR /var/www
 
