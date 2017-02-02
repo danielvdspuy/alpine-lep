@@ -73,6 +73,12 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 # Copy configs & scripts
 ADD ./supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 ADD ./start.sh /start.sh
+
+# Set permissions
+RUN chmod 755 /start.sh
+RUN usermod -u 1000 www-data
+RUN usermod -G staff www-data
+RUN chown -R www-data:www-data /var/www
     
 # Set work directory
 WORKDIR /var/www
