@@ -100,9 +100,6 @@ RUN mkdir -p /etc/nginx && \
     
     # Set perms for www-data user
     chown -R www-data:www-data /var/www
-    
-# Set work directory
-WORKDIR /var/www
 
 # Expose volumes
 VOLUME ["/var/www"]
