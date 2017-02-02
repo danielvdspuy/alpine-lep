@@ -67,8 +67,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
     
 # Cleanup
 &&  mkdir /var/www \
-    apk del tzdata && \
-	rm -rf /var/cache/apk/*
+&&  apk del tzdata \
+&&	rm -rf /var/cache/apk/*
     
 # Copy configs & scripts
 ADD ./supervisor.conf /etc/supervisor/conf.d/supervisord.conf
