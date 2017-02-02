@@ -35,7 +35,6 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
             php7-pdo \
             php7-gd \
             php7-xmlreader \
-            php7-xmlwriter \
             php7-iconv \
             php7-curl \
 &&  pecl install imagick \
