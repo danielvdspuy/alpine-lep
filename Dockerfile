@@ -19,38 +19,45 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 
 # Install packages
 &&  apk add --update \
-            freetype-dev \
-            libpng-dev \
-            libjpeg-turbo-dev \
-            libxml2-dev \
+#            freetype-dev \
+#            libpng-dev \
+#            libjpeg-turbo-dev \
+#            libxml2-dev \
             autoconf \
-            gcc \
+#            gcc \
             g++ \
             imagemagick-dev \
             libtool \
             make \
-            php7-mcrypt \
-            php7-json \
-            php7-dom \
-            php7-pdo \
+#            php7-mcrypt \
+#            php7-json \
+#            php7-dom \
+#            php7-pdo \
             php7-gd \
-            php7-xmlreader \
-            php7-iconv \
-            php7-curl \
-&&  pecl install imagick \
-&&  apk add --update \
-            nginx \
+#            php7-xmlreader \
+            php7-xml \
+#            php7-iconv \
+#            php7-curl \
+#            php7 \
             php7-fpm \
+            php7-pear \
+            php7-dev \
+            nginx \
             supervisor \
             
+&&  sed -i "$ s|\-n||g" /usr/bin/pecl \
+            
+# Install imagick
+&&  pecl install imagick \
+            
 # Stop supervisor
-&&  service supervisor stop \
+#&&  service supervisord stop \
 
 # Delete compilation dependencies
 &&  apk del autoconf g++ libtool make \
 
 # Enable imagick PHP extension
-&&  echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini \
+&&  echo "extension=imagick.so" > /etc/php7/php.ini \
 
 # Setup
 &&  sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf \
@@ -64,9 +71,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 &&  sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php7/php.ini \
     
 # Cleanup
-&&  mkdir /var/www \
 &&  apk del tzdata \
-&&	rm -rf /var/cache/apk/*
+#&&	rm -rf /var/cache/apk/*
     
 # Copy configs & scripts
 ADD ./supervisor.conf /etc/supervisor/conf.d/supervisor.conf
