@@ -1,27 +1,29 @@
-version: '2'
+version: '2.0'
 
-nginx:
-  build: ./
-  volumes:
-    - ./compose/nginx.conf:/etc/nginx/nginx.conf:ro
-    - ./compose/default.conf:/etc/nginx/conf.d/default.conf:ro
-    - ./app:/var/www/
-  ports:
-    - "80:80"
-  links:
-    - mariadb
-  environment:
-    DB_SERVER: mariadb
-    DB_USER: root
-    DB_PASSWORD: root
-    DB_NAME: test
-    
-mariadb:
-  image: maketok/mariadb-alpine
-  ports:
-    - "3306:3306"
-  environment:
-    - MYSQL_ROOT_PASSWORD=root
-    - MYSQL_DATABASE=test
-  volumes:
-    - ./mariadb-data:/var/lib/mysql
+services:
+
+  nginx:
+    build: ./
+    volumes:
+      - ./compose/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./compose/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app:/var/www/
+    ports:
+      - "80:80"
+    links:
+      - mariadb
+    environment:
+      DB_SERVER: mariadb
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: test
+
+  mariadb:
+    image: maketok/mariadb-alpine
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test
+    volumes:
+      - ./mariadb-data:/var/lib/mysql
