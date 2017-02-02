@@ -81,4 +81,4 @@ EXPOSE 80
 EXPOSE 9000
 
 # Script entry point
-ENTRYPOINT ["/bin/bash", "/start.sh"]
+CMD ["/bin/bash", "/start.sh"]
