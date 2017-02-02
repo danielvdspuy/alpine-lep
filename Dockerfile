@@ -22,12 +22,7 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     # Install global deps
     apk --update add \
     curl \
-    shadow \
-    autoconf \
-    g++ \
-    imagemagick-dev \
-    libtool \
-    make && \
+    shadow && \
 
     # Install php7-fpm, nginx, supervisor
     apk --update add \
@@ -49,23 +44,19 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     php7-xmlreader \
     php7-pear \
     php7-dev \
-    supervisor && \
-            
-    sed -i "$ s|\-n||g" /usr/bin/pecl && \
-            
-    # Install imagick
-    pecl install imagick && \
+    supervisor \
 
-    # Cleanup
-    rm -rf /var/cache/apk/* && \
-    apk del --purge \
-    tzdata \
-    php7-dev \
-    php7-pear \
+    # Install deps to compile imagemagick
     autoconf \
     g++ \
+    imagemagick-dev \
     libtool \
     make && \
+
+    sed -i "$ s|\-n||g" /usr/bin/pecl && \
+
+    # Install imagick
+    pecl install imagick && \
 
     # Enable imagick PHP extension
     echo "extension=imagick.so" > /etc/php7/php.ini && \
@@ -99,14 +90,24 @@ RUN mkdir -p /etc/nginx && \
     adduser -u 82 -D -S -G www-data www-data && \
     
     # Set perms for www-data user
-    chown -R www-data:www-data /var/www
+    chown -R www-data:www-data /var/www && \
+    
+    # Housekeeping
+    rm -rf /var/cache/apk/* && \
+    apk del --purge \
+    tzdata \
+    php7-dev \
+    php7-pear \
+    autoconf \
+    g++ \
+    libtool \
+    make \
+    shadow
 
 # Expose volumes
 VOLUME ["/var/www"]
 
-COPY ./app/html/ /var/www/html
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
-COPY ./config/default.conf /etc/nginx/conf.d/default.conf
 
 # Expose ports
 EXPOSE 80 9000
