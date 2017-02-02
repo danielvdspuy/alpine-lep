@@ -41,7 +41,6 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 &&  pecl install imagick \
 &&  apk add --update \
             nginx \
-            php7 \
             php7-fpm \
             supervisor \
             
