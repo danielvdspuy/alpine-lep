@@ -1,30 +1,30 @@
+# Docker 'LEP' server
 A Docker container running Nginx and PHP7-FPM. Running these services in separate containers seems to degrade functionality somewhat.
 
-# Prepare image
+## Prepare image
 
-## Pull from the Docker Hub Registry
+### Pull from the Docker Hub Registry
 ```bash
 docker pull danielvdspuy/alpine-lep:latest
 ```
 
-## Build locally
+### Build locally
 ```bash
 docker build -t danielvdspuy/alpine-lep:latest https://github.com/danielvdspuy/alpine-lep.git
 ```
 
-# Usage
+## Usage
 
-## tl;dr
+### tl;dr
 ```bash
 docker run --name foobar -P danielvdspuy/alpine-lep:latest
 ```
 
 The `-P` flag publishes the exposed ports; 80 & 9000. You can manually expose or remap ports using `-p LOCALPORT:CONTAINERPORT`.
 
-## docker-compose
-Place your application in `./www` and your default server block config in `./default.conf`. Generally it’s best to put public files in /var/www/html or similar, rather than setting the root to your application’s base directory – but this depends on the nature of your application.
+### docker-compose
+Place your application in `./www` and your default server block config in `./default.conf`.
 
-### Additional sites/vhosts
 Add any other server blocks by adding a volume entry for each with the format: `- VHOSTNAME:/etc/nginx/sites-enabled/VHOSTNAME:ro`. Be sure to set the server root to something other than the default `/var/www` directory, and point a local directory there.
 
 ```yaml
