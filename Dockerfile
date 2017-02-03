@@ -42,6 +42,8 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     php7-iconv \
     php7-mbstring \
     php7-ctype \
+    php7-common \
+    php7-session \
     php7-xml \
     php7-xmlreader \
     php7-pear \
