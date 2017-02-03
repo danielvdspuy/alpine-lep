@@ -28,7 +28,6 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     apk --update add \
     nginx \
     php7 \
-    php7-common \
     php7-fpm \
     php7-zlib \
     php7-curl \
@@ -42,6 +41,7 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     php7-phar \
     php7-iconv \
     php7-mbstring \
+    php7-ctype
     php7-xml \
     php7-xmlreader \
     php7-pear \
