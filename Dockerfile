@@ -35,6 +35,7 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     php7-json \
     php7-dom \
     php7-pdo \
+    php7-pdo_mysql \
     php7-gd \
     php7-openssl \
     php7-phar \
