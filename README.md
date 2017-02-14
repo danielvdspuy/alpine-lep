@@ -1,3 +1,5 @@
+[![Docker build status](https://img.shields.io/docker/status/danielvdspuy/alpine-lep.svg)]()
+
 # Docker 'LEP' server
 A Docker container running Nginx and PHP7-FPM. Running these services in separate containers seems to degrade functionality somewhat.
 
