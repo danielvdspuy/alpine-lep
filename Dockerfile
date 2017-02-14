@@ -68,6 +68,8 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     # Config php-fpm
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*;clear_env\s*=\s*no|clear_env = no|g" /etc/php7/php-fpm.d/www.conf && \
+    sed -i "s|;*user\s*=\s*nobody|user = www-data|g" /etc/php7/php-fpm.d/www.conf && \
+    sed -i "s|;*group\s*=\s*nobody|group = www-data|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf && \
 
