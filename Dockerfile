@@ -9,23 +9,18 @@ ENV PHP_MAX_FILE_UPLOAD 200
 ENV PHP_MAX_POST        100M
 ENV PHP_MAX_EXEC_TIME   300
 
-# Add alpine edge repos
-RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories && \
-    echo 'http://alpine.gliderlabs.com/alpine/edge/community' >> /etc/apk/repositories && \
-    echo 'http://alpine.gliderlabs.com/alpine/edge/testing' >> /etc/apk/repositories && \
-
-    # Set apk timezone
-    apk add --update tzdata && \
+# Set timezone
+RUN apk add --update tzdata && \
     cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
 
     # Install global deps
-    apk --update add \
+    apk --update --no-cache add \
     curl \
     shadow && \
 
     # Install php7-fpm, nginx, supervisor
-    apk --update add \
+    apk --update --no-cache add \
     nginx \
     php7 \
     php7-fpm \
@@ -56,20 +51,17 @@ RUN echo 'http://alpine.gliderlabs.com/alpine/edge/main' > /etc/apk/repositories
     imagemagick-dev \
     libtool \
     make && \
-
+    
+    # PECL XML support
     sed -i "$ s|\-n||g" /usr/bin/pecl && \
 
     # Install imagick
     pecl install imagick && \
-
-    # Enable imagick PHP extension
     echo "extension=imagick.so" > /etc/php7/php.ini && \
 
     # Config php-fpm
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*;clear_env\s*=\s*no|clear_env = no|g" /etc/php7/php-fpm.d/www.conf && \
-    sed -i "s|;*user\s*=\s*nobody|user = www-data|g" /etc/php7/php-fpm.d/www.conf && \
-    sed -i "s|;*group\s*=\s*nobody|group = www-data|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf && \
 
