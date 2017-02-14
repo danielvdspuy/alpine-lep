@@ -4,4 +4,4 @@ services:
   - docker
 
 script:
-  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker build -f Dockerfile -t danielvdspuy/alpine-lep:TRAVIS_COMMIT .
