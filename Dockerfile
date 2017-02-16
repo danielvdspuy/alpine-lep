@@ -51,7 +51,7 @@ RUN apk add --update tzdata && \
     imagemagick-dev \
     libtool \
     make && \
-    
+
     # PECL XML support
     sed -i "$ s|\-n||g" /usr/bin/pecl && \
 
@@ -62,6 +62,8 @@ RUN apk add --update tzdata && \
     # Config php-fpm
     sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf && \
     sed -i "s|;*;clear_env\s*=\s*no|clear_env = no|g" /etc/php7/php-fpm.d/www.conf && \
+    sed -i "s|;*user\s*=\s*nobody|user = www-data" /etc/php7/php-fpm.d/www.conf && \
+    sed -i "s|;*group\s*=\s*nobody|group = www-data" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /etc/php7/php-fpm.d/www.conf && \
     sed -i "s|;*listen\s*=\s*/||g" /etc/php7/php-fpm.d/www.conf && \
 
@@ -74,7 +76,7 @@ RUN apk add --update tzdata && \
     sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|i" /etc/php7/php.ini && \
     sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php7/php.ini && \
     sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php7/php.ini
-    
+
 # Copy configs and scripts
 ADD ./supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
@@ -87,10 +89,10 @@ RUN mkdir -p /etc/nginx && \
     set -x ; \
     addgroup -g 82 -S www-data ; \
     adduser -u 82 -D -S -G www-data www-data && \
-    
+
     # Set perms for www-data user
     chown -R www-data:www-data /var/www && \
-    
+
     # Housekeeping
     rm -rf /var/cache/apk/* && \
     apk del --purge \
