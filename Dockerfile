@@ -34,7 +34,6 @@ RUN apk add --update tzdata && \
     php7-gd \
     php7-openssl \
     php7-phar \
-    php7-iconv \
     php7-mbstring \
     php7-ctype \
     php7-common \
